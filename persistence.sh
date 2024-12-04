@@ -32,7 +32,7 @@ read usb
 
 echo "$bar"
 echo "This script is designed to be run as the first step in setting up a live kali usb with persistence."
-echo "Run at your own risk. This will make a partition on $usb."
+echo "Run at your own risk. This will make a new partition on $usb and then reboot."
 echo ""
 echo -n "[?] Do you want to continue [Y/n]: "
 read -r confirm
@@ -52,6 +52,7 @@ echo "$bar"
 
 # sudo mkfs.ext4 -L persistence ${usb}3
 fdisk -l ${usb}
+echo "$bar"
 echo ""
 echo -n "[?] Which partition is labeled 'Linux' (eg. /dev/sdb3): "
 read -r part
@@ -85,19 +86,19 @@ echo "$bar"
 
 mount ${part} ${mnt}
 
-# echo "/ union" | sudo tee /mnt/my_usb/persistence.conf
-echo "Mount $usb at $mnt"
+# echo "/ union" | sudo tee /mnt/my_usb/persistence.conf and unmount usb
+echo "$bar"
+echo "Mounted $usb at $mnt"
 echo ""
 echo "[+] Making configuration file for persistence"
 echo "$bar"
 
 echo "/ union" | tee ${mnt}/persistence.conf
+umount ${part}
 
-# sudo umount ${usb}3
 echo "$bar"
 echo "[+] Finished making configuration file"
 echo ""
-echo "[+] Unmounting $usb from $mnt"
-echo "Reboot into persistence mode manually"
-
-umount ${part}
+echo "[+] Unmounted $usb from $mnt"
+echo "[!] Rebooting"
+echo "$bar"
